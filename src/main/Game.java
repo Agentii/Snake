@@ -1,60 +1,51 @@
 package main;
 
-import java.util.Random;
-
 import controller.KeyboardInputs;
+import entity.Body;
+import entity.Food;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.animation.AnimationTimer;
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
-import snake.Body;
 
-public class Game extends Application {
-	
-	public static int SCENE_WIDTH = 1000, SCENE_HEIGHT = 800;
+import static main.Main.SCENE_WIDTH;
+import static main.Main.SCENE_HEIGHT;
 
-	public static Stage stage;
-	public static BorderPane layoutRoot = new BorderPane();
-	public static Pane gameRoot = new Pane();
 
-	public static Scene scene = new Scene(layoutRoot, SCENE_WIDTH, SCENE_HEIGHT);
+public class Game {
 	
-	public static Body head, tail, tmp;
-	public static Rectangle food;
-	
-	public static int xDir, yDir;
-	
-	public static Random rand = new Random();
-	
-	private AnimationTimer timer;
+	public static final int ENTITY_SIZE = 20;
 
-	public static void main(String[] args) {
-		launch(args);
+	public static AnimationTimer gameloop;
+
+	public static int xDir = 1, yDir = 1;
+
+	private Body head, tail, tmpBody;
+	private Food food;
+	private int snakeSize = 1;
+
+	private List<Body> badBodyparts = new ArrayList<Body>();
+	
+	public Game() {
+		start();
 	}
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		stage = primaryStage;
-		
-		initStage();
-		initFood();
+	private void start() {		
 		initSnake();
-		
-		timer = new AnimationTimer() {
+		initFood();
+		KeyboardInputs.controlSnake();
+
+		gameloop = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				KeyboardInputs.controlSnake();
+				KeyboardInputs.keyWait = false;
 				updateSnake();
 				
-				if (head.x == (int) food.getX() && head.y == (int) food.getY()) {
-					addBody();
-					updateFood();
-				}
+				checkWallCollision();
+				checkFoodCollision();
+				if (snakeSize > 4)
+					checkSnakeCollision();
 				
 				try {
 					Thread.sleep(70);
@@ -63,59 +54,72 @@ public class Game extends Application {
 				}
 			}			
 		};
-		
-		timer.start();
+		Main.stage.show();
 
-		stage.show();
-
-	}
-	
-	private void initStage() {
-		stage.setScene(scene);
-		stage.setTitle("Snake");
-		stage.setOnCloseRequest(e -> exit());
-		stage.setResizable(false);
-
-		scene.setFill(Color.color(0.1, 0.15, 0.18));
-
-		layoutRoot.setCenter(gameRoot);
 	}
 	
 	private void initFood() {
-		food = new Rectangle(100, 160, 20, 20);
-		food.setFill(Color.RED);
-		gameRoot.getChildren().add(food);		
+		food = new Food(0, 0);
+		updateFood();
 	}
 	
 	private void initSnake() {
-		head = new Body(200, 200);
+		head = new Body(Main.SCENE_WIDTH / 2, Main.SCENE_HEIGHT / 2);
 		tail = head;
 		head.next = tail;
 		tail.next = head;
 	}
 	
 	private void updateSnake() {
-		tail.x = head.x;
-		tail.y = head.y;
+		tail.setX(head.getX());
+		tail.setY(head.getY());
 		head = tail;
 		tail = tail.next;
 		head.update();
 	}
 		
 	private void updateFood() {
-		food.setX(rand.nextInt(SCENE_WIDTH / 20)*20);
-		food.setY(rand.nextInt(SCENE_HEIGHT / 20)*20);
+		food.update();
 	}
 	
 	private void addBody() {
-		tmp = new Body(tail.x, tail.y);
-		head.next = tmp;
-		tmp.next = tail;
-		tail = tmp;
+		tmpBody = new Body(tail.getX(), tail.getY());
+		head.next = tmpBody;
+		tmpBody.next = tail;
+		tail = tmpBody;
+		snakeSize++;
+		if (snakeSize > 4 && (snakeSize & 1) == 1) {
+			badBodyparts.add(tail);
+		}
 	}
-
-	private void exit() {
-		Platform.exit();
+	
+	private void checkWallCollision() {
+		if ((head.getX() + ENTITY_SIZE) % (SCENE_WIDTH + ENTITY_SIZE) * ((head.getY() + ENTITY_SIZE) % (SCENE_HEIGHT + ENTITY_SIZE)) == 0) {
+			head.setX((head.getX() + SCENE_WIDTH) % SCENE_WIDTH);
+			head.setY((head.getY() + SCENE_HEIGHT) % SCENE_HEIGHT);
+		}
+	}
+	
+	private void checkFoodCollision() {
+		if (head.getX() == food.getX() && head.getY() == food.getY()) {
+			addBody();
+			updateFood();
+		}
+	}
+	
+	private void checkSnakeCollision() {
+		Body body;
+		for (int i=0; i < badBodyparts.size(); i++) {
+			body = badBodyparts.get(i);
+			if (head.getX() == body.getX() && head.getY() == body.getY())
+				gameOver();
+			badBodyparts.set(i, body.next);
+		}
+	}
+	
+	private void gameOver() {
+		gameloop.stop();
+		System.out.println("Damn, u bad...");
 	}
 
 }
