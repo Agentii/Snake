@@ -2,11 +2,9 @@ package entity;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import main.Game;
 
 import static main.Game.ENTITY_SIZE;
-import static main.Main.gameRoot;
-import static main.Game.xDir;
-import static main.Game.yDir;
 
 public class Body extends Rectangle {
 		
@@ -17,13 +15,12 @@ public class Body extends Rectangle {
 		
 		setFill(Color.LIGHTGREEN);
 		setViewOrder(1);
-		gameRoot.getChildren().add(this);
+		Game.gameRoot.getChildren().add(this);
 	}
 	
 	public void update() {
-		setX(getX() + xDir * ENTITY_SIZE);
-		setY(getY() + yDir * ENTITY_SIZE);
-
+		setX(getX() + Game.xDir * ENTITY_SIZE);
+		setY(getY() + Game.yDir * ENTITY_SIZE);
 	}
 
 }

@@ -8,14 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.animation.AnimationTimer;
-
-import static main.Main.SCENE_WIDTH;
-import static main.Main.SCENE_HEIGHT;
+import javafx.scene.layout.Pane;
 
 
 public class Game {
 	
+	public static Pane gameRoot = new Pane();
+	
+	public static final int GAME_WIDTH = 600, GAME_HEIGHT = Main.SCENE_HEIGHT;
 	public static final int ENTITY_SIZE = 20;
+	public static final int EASY = 40, MEDIUM = 70, HARD = 100;
 
 	public static AnimationTimer gameloop;
 
@@ -25,30 +27,38 @@ public class Game {
 	private Food food;
 	private int snakeSize = 1;
 
+	public static int score, highscore;
+	public static boolean gameOver;
+
 	private List<Body> badBodyparts = new ArrayList<Body>();
 	
 	public Game() {
+		gameOver = false;
+		updateScore(0);		
+		gameRoot.setMaxWidth(GAME_WIDTH);
+		gameRoot.getChildren().clear();
 		start();
 	}
 
-	private void start() {		
+	private void start() {
 		initSnake();
 		initFood();
 		KeyboardInputs.controlSnake();
-
 		gameloop = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
+				if (gameOver)
+					return;
 				KeyboardInputs.keyWait = false;
-				updateSnake();
 				
+				updateSnake();
 				checkWallCollision();
 				checkFoodCollision();
 				if (snakeSize > 4)
 					checkSnakeCollision();
 				
 				try {
-					Thread.sleep(70);
+					Thread.sleep(MEDIUM);
 				}
 				catch (InterruptedException e) {
 				}
@@ -64,7 +74,7 @@ public class Game {
 	}
 	
 	private void initSnake() {
-		head = new Body(Main.SCENE_WIDTH / 2, Main.SCENE_HEIGHT / 2);
+		head = new Body(GAME_WIDTH / 2, GAME_HEIGHT / 2);
 		tail = head;
 		head.next = tail;
 		tail.next = head;
@@ -82,6 +92,14 @@ public class Game {
 		food.update();
 	}
 	
+	private void updateScore(int newScore) {
+		score = newScore;
+		if (score > highscore) {
+			highscore = score;
+		}
+		Sidebar.updateScoreboard();		
+	}
+	
 	private void addBody() {
 		tmpBody = new Body(tail.getX(), tail.getY());
 		head.next = tmpBody;
@@ -94,9 +112,9 @@ public class Game {
 	}
 	
 	private void checkWallCollision() {
-		if ((head.getX() + ENTITY_SIZE) % (SCENE_WIDTH + ENTITY_SIZE) * ((head.getY() + ENTITY_SIZE) % (SCENE_HEIGHT + ENTITY_SIZE)) == 0) {
-			head.setX((head.getX() + SCENE_WIDTH) % SCENE_WIDTH);
-			head.setY((head.getY() + SCENE_HEIGHT) % SCENE_HEIGHT);
+		if ((head.getX() + ENTITY_SIZE) % (GAME_WIDTH + ENTITY_SIZE) * ((head.getY() + ENTITY_SIZE) % (GAME_HEIGHT + ENTITY_SIZE)) == 0) {
+			head.setX((head.getX() + GAME_WIDTH) % GAME_WIDTH);
+			head.setY((head.getY() + GAME_HEIGHT) % GAME_HEIGHT);
 		}
 	}
 	
@@ -104,6 +122,7 @@ public class Game {
 		if (head.getX() == food.getX() && head.getY() == food.getY()) {
 			addBody();
 			updateFood();
+			updateScore(++score);
 		}
 	}
 	
@@ -118,8 +137,8 @@ public class Game {
 	}
 	
 	private void gameOver() {
-		gameloop.stop();
-		System.out.println("Damn, u bad...");
+		gameOver = true;
+		Sidebar.showGameOver(true);
 	}
 
 }

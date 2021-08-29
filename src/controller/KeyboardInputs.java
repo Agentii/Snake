@@ -55,7 +55,8 @@ public class KeyboardInputs {
 			case P:
 			case ESCAPE:
 				Game.gameloop.stop();
-			
+				break;
+				
 			default:
 				break;
 			}

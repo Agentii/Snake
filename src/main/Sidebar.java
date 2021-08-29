@@ -1,35 +1,126 @@
 package main;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
-import static main.Main.sidebarRoot;
+import static main.Main.SCENE_HEIGHT;
 
 public class Sidebar {
 	
+	public static final int SIDEBAR_WIDTH = 100;
+	
+	public static AnchorPane sidebarRoot = new AnchorPane();
+	private static Label highscore, score;
+	private static Text gameOver;
+	
 	public Sidebar() {
+		sidebarRoot.getChildren().clear();
 		initSidebar();
 	}
 	
 	private void initSidebar() {
-		VBox vbox = new VBox();
-		vbox.setPadding(new Insets(0, 10, 10, 10));
+		// Scoreboard
+		VBox scoreboard = new SidebarVBox(10, Pos.TOP_CENTER);	
+		scoreboard.setBackground(getBackground(Color.color(0.05, 0.2, 0.16), null, null));
+
+		highscore = new SidebarLabel(String.format("HIGHSCORE\n%d", 0));
+		score = new SidebarLabel(String.format("SCORE\n%d", 0));
 		
-		Label highscore = new Label("HIGH");
-		Label score = new Label("SCORE");
+		// Game over text
+		gameOver = new Text("\n\n\n\nGame\nOver");
+		gameOver.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+		gameOver.setTextAlignment(TextAlignment.CENTER);
+		gameOver.setFill(Color.RED);
+		gameOver.setVisible(false);
+		DropShadow shadow = new DropShadow();
+		shadow.setColor(Color.color(0.8, 0.2, 0.2));
+		shadow.setRadius(30);
+		shadow.setSpread(0.3);
+		gameOver.setEffect(shadow);
 		
-		vbox.getChildren().addAll(highscore, score);
+		scoreboard.getChildren().addAll(highscore, score, gameOver);
 		
-		Button restart = new Button("Restart");
-		restart.setOnAction((event) -> Main.restart());
+		// Restart and quit (options)
+		VBox options = new SidebarVBox(10, Pos.BOTTOM_CENTER);
 		
-		sidebarRoot.getChildren().addAll(vbox, restart);
-		AnchorPane.setBottomAnchor(restart, 8.0);
-		AnchorPane.setRightAnchor(restart, 5.0);
-		AnchorPane.setTopAnchor(vbox, 10.0);
+		Button restart = new SidebarButton("Restart");
+		restart.setOnAction(e -> Main.restart());
+		
+		Button quit = new SidebarButton("Quit");
+		quit.setOnAction(e -> Main.exit());
+		
+		options.getChildren().addAll(restart, quit);
+		
+		// Add to root
+		sidebarRoot.getChildren().addAll(scoreboard, options);
+		AnchorPane.setBottomAnchor(options, 0.);
+		
+	}
+	
+	private class SidebarLabel extends Label {
+		
+		private SidebarLabel(String text) {
+			super(text);
+			setAlignment(Pos.CENTER);
+			setTextAlignment(TextAlignment.CENTER);
+			setPrefWidth(90);
+			setTextFill(Color.WHITE);
+			setBackground(Sidebar.this.getBackground(Color.color(0.1, 0.15, 0.18), 10, null));
+		}
+	}
+	
+	private class SidebarButton extends Button {
+		
+		private SidebarButton(String text) {
+			super(text);
+			setStyle("-fx-cursor: hand");
+			setFont(Font.font("Verdana", FontWeight.BOLD, 11));
+			setPrefWidth(80);
+			setFocusTraversable(false);
+		}
+	}
+	
+	private class SidebarVBox extends VBox {
+		
+		private SidebarVBox(double spacing, Pos alignment) {
+			super(spacing);
+			setPrefSize(SIDEBAR_WIDTH, SCENE_HEIGHT);
+			setAlignment(alignment);
+			setPadding(new Insets(15, 0, 15, 0));
+		}
+	}
+	
+	private Background getBackground(Color color, Integer radii, Integer insets) {
+		CornerRadii rad = null;
+		Insets in = null;
+		if (radii != null)
+			rad = new CornerRadii(radii);
+		if (insets != null)
+			in = new Insets(insets);
+		BackgroundFill fill = new BackgroundFill(color, rad, in);
+		return new Background(fill);
+	}
+	
+	public static void updateScoreboard() {
+		highscore.setText(String.format("HIGHSCORE\n%d", Game.highscore));
+		score.setText(String.format("SCORE\n%d", Game.score));
+	}
+	
+	public static void showGameOver(boolean visible) {
+		gameOver.setVisible(visible);
 	}
 	
 }

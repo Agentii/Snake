@@ -2,13 +2,11 @@ package entity;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import main.Game;
 
 import java.util.Random;
 
-import static main.Main.SCENE_WIDTH;
-import static main.Main.SCENE_HEIGHT;
 import static main.Game.ENTITY_SIZE;
-import static main.Main.gameRoot;
 
 public class Food extends Rectangle {
 
@@ -18,12 +16,12 @@ public class Food extends Rectangle {
 		super(x, y, ENTITY_SIZE, ENTITY_SIZE);
 		this.setFocused(true);
 		setFill(Color.RED);
-		gameRoot.getChildren().add(this);
+		Game.gameRoot.getChildren().add(this);
 	}
 
 	public void update() {
-		setX(rand.nextInt(SCENE_WIDTH / ENTITY_SIZE) * ENTITY_SIZE);
-		setY(rand.nextInt(SCENE_HEIGHT / ENTITY_SIZE) * ENTITY_SIZE);		
+		setX(rand.nextInt(Game.GAME_WIDTH / ENTITY_SIZE) * ENTITY_SIZE);
+		setY(rand.nextInt(Game.GAME_HEIGHT / ENTITY_SIZE) * ENTITY_SIZE);		
 	}
 
 }
