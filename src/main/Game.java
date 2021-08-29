@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.animation.AnimationTimer;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 
 
 public class Game {
@@ -23,6 +26,7 @@ public class Game {
 
 	public static int xDir = 1, yDir = 1;
 
+	private ImagePattern eyes = new ImagePattern(new Image("Images/Snake head.png"));
 	private Body head, tail, tmpBody;
 	private Food food;
 	private int snakeSize = 1;
@@ -78,13 +82,17 @@ public class Game {
 		tail = head;
 		head.next = tail;
 		tail.next = head;
+		head.setFill(eyes);
 	}
 	
 	private void updateSnake() {
-		tail.setX(head.getX());
-		tail.setY(head.getY());
+		tail.setPosition(head.getX(), head.getY());
+		head.setFill(Color.LIGHTGREEN);
+		head.setViewOrder(1);
 		head = tail;
 		tail = tail.next;
+		head.setFill(eyes);
+		head.setViewOrder(0);
 		head.update();
 	}
 		
@@ -113,8 +121,9 @@ public class Game {
 	
 	private void checkWallCollision() {
 		if ((head.getX() + ENTITY_SIZE) % (GAME_WIDTH + ENTITY_SIZE) * ((head.getY() + ENTITY_SIZE) % (GAME_HEIGHT + ENTITY_SIZE)) == 0) {
-			head.setX((head.getX() + GAME_WIDTH) % GAME_WIDTH);
-			head.setY((head.getY() + GAME_HEIGHT) % GAME_HEIGHT);
+			double newX = (head.getX() + GAME_WIDTH) % GAME_WIDTH;
+			double newY = (head.getY() + GAME_HEIGHT) % GAME_HEIGHT;
+			head.setPosition(newX, newY);
 		}
 	}
 	
