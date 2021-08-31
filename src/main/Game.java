@@ -1,6 +1,7 @@
 package main;
 
 import controller.KeyboardInputs;
+import entity.Head;
 import entity.Body;
 import entity.Food;
 
@@ -8,11 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.animation.AnimationTimer;
-import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-
 
 public class Game {
 	
@@ -26,10 +23,10 @@ public class Game {
 
 	public static int xDir = 1, yDir = 1;
 
-	private ImagePattern eyes = new ImagePattern(new Image("Images/Snake head.png"));
-	private Body head, tail, tmpBody;
+	private Head head;
+	private Body neck, tail, tmpBody;
 	private Food food;
-	private int snakeSize = 1;
+	private int snakeSize = 2;
 
 	public static int score, highscore;
 	public static boolean gameOver;
@@ -61,6 +58,7 @@ public class Game {
 				if (snakeSize > 4)
 					checkSnakeCollision();
 				
+				
 				try {
 					Thread.sleep(MEDIUM);
 				}
@@ -78,21 +76,15 @@ public class Game {
 	}
 	
 	private void initSnake() {
-		head = new Body(GAME_WIDTH / 2, GAME_HEIGHT / 2);
-		tail = head;
-		head.next = tail;
-		tail.next = head;
-		head.setFill(eyes);
+		head = new Head(GAME_WIDTH / 2, GAME_HEIGHT / 2);
+		neck = tail = new Body(head.getX(), head.getY());
+		neck.next = tail.next = tail;
 	}
 	
 	private void updateSnake() {
 		tail.setPosition(head.getX(), head.getY());
-		head.setFill(Color.LIGHTGREEN);
-		head.setViewOrder(1);
-		head = tail;
+		neck = tail;
 		tail = tail.next;
-		head.setFill(eyes);
-		head.setViewOrder(0);
 		head.update();
 	}
 		
@@ -108,9 +100,13 @@ public class Game {
 		Sidebar.updateScoreboard();		
 	}
 	
+	private void smoothAnimation() {
+		
+	}
+	
 	private void addBody() {
 		tmpBody = new Body(tail.getX(), tail.getY());
-		head.next = tmpBody;
+		neck.next = tmpBody;
 		tmpBody.next = tail;
 		tail = tmpBody;
 		snakeSize++;
@@ -131,7 +127,7 @@ public class Game {
 		if (head.getX() == food.getX() && head.getY() == food.getY()) {
 			addBody();
 			updateFood();
-			updateScore(++score);
+			updateScore(score+10);
 		}
 	}
 	
