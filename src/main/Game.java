@@ -60,7 +60,7 @@ public class Game {
 				
 				
 				try {
-					Thread.sleep(MEDIUM);
+					Thread.sleep(0);
 				}
 				catch (InterruptedException e) {
 				}
@@ -76,7 +76,7 @@ public class Game {
 	}
 	
 	private void initSnake() {
-		head = new Head(GAME_WIDTH / 2, GAME_HEIGHT / 2);
+		head = new Head(GAME_WIDTH >> 1, GAME_HEIGHT >> 1);
 		neck = tail = new Body(head.getX(), head.getY());
 		neck.next = tail.next = tail;
 	}

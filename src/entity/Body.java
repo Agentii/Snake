@@ -14,6 +14,8 @@ public class Body extends Rectangle {
 		super(x, y, ENTITY_SIZE, ENTITY_SIZE);
 		setFill(Color.LIGHTGREEN);
 		setViewOrder(1);
+		setStroke(Color.color(0.1, 0.15, 0.18));
+		setStrokeWidth(0.1);
 		
 		Game.gameRoot.getChildren().add(this);
 	}

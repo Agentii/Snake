@@ -26,8 +26,8 @@ public class Head extends Body {
 	}
 	
 	private void updatePivot() {
-		rotate.setPivotX(getX() + ENTITY_SIZE / 2);
-		rotate.setPivotY(getY() + ENTITY_SIZE / 2);
+		rotate.setPivotX(getX() + (ENTITY_SIZE >> 1));
+		rotate.setPivotY(getY() + (ENTITY_SIZE >> 1));
 		rotate.setAngle((Game.xDir + Game.yDir + Math.abs(Game.yDir)) * 90);
 	}
 
