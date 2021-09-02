@@ -30,7 +30,7 @@ public class Sidebar {
 	
 	private void initSidebar() {
 		sidebarRoot.setStyle("-fx-background-radius: 0 10 10 0; -fx-background-color: #0d3329;");
-		
+
 		// Scoreboard
 		VBox scoreboard = new SidebarVBox(10, Pos.TOP_CENTER);	
 

@@ -9,13 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.animation.AnimationTimer;
+import javafx.geometry.Insets;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 public class Game {
 	
 	public static Pane gameRoot = new Pane();
 	
-	public static final int GAME_WIDTH = 600, GAME_HEIGHT = Main.SCENE_HEIGHT;
+	public static final int GAME_WIDTH = 600, GAME_HEIGHT = 520;
 	public static final int ENTITY_SIZE = 20;
 	public static final int EASY = 40, MEDIUM = 70, HARD = 100;
 
@@ -52,7 +55,7 @@ public class Game {
 				if (gameOver)
 					return;
 				KeyboardInputs.keyWait = false;
-				
+
 				updateSnake();
 				checkWallCollision();
 				checkFoodCollision();
@@ -118,9 +121,10 @@ public class Game {
 	
 	private void checkWallCollision() {
 		if ((head.getX() + ENTITY_SIZE) % (GAME_WIDTH + ENTITY_SIZE) * ((head.getY() + ENTITY_SIZE) % (GAME_HEIGHT + ENTITY_SIZE)) == 0) {
-			double newX = (head.getX() + GAME_WIDTH) % GAME_WIDTH;
-			double newY = (head.getY() + GAME_HEIGHT) % GAME_HEIGHT;
+			double newX = (head.getX() + GAME_WIDTH) % GAME_WIDTH - ENTITY_SIZE * xDir;
+			double newY = (head.getY() + GAME_HEIGHT) % GAME_HEIGHT - ENTITY_SIZE * yDir;
 			head.setPosition(newX, newY);
+			head.update();
 		}
 	}
 	
