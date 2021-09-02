@@ -6,9 +6,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -32,9 +29,10 @@ public class Sidebar {
 	}
 	
 	private void initSidebar() {
+		sidebarRoot.setStyle("-fx-background-radius: 0 10 10 0; -fx-background-color: #0d3329;");
+		
 		// Scoreboard
 		VBox scoreboard = new SidebarVBox(10, Pos.TOP_CENTER);	
-		scoreboard.setBackground(getBackground(Color.color(0.05, 0.2, 0.16), null, null));
 
 		highscore = new SidebarLabel(String.format("HIGHSCORE\n%d", 0));
 		score = new SidebarLabel(String.format("SCORE\n%d", 0));
@@ -78,7 +76,7 @@ public class Sidebar {
 			setTextAlignment(TextAlignment.CENTER);
 			setPrefWidth(90);
 			setTextFill(Color.WHITE);
-			setBackground(Sidebar.this.getBackground(Color.color(0.1, 0.15, 0.18), 10, null));
+			setStyle("-fx-background-color: #19262e; -fx-background-radius: 10 10 10 10;");
 		}
 	}
 	
@@ -100,18 +98,8 @@ public class Sidebar {
 			setPrefSize(SIDEBAR_WIDTH, SCENE_HEIGHT);
 			setAlignment(alignment);
 			setPadding(new Insets(15, 0, 15, 0));
+			setStyle("-fx-background-color: transparent;");
 		}
-	}
-	
-	private Background getBackground(Color color, Integer radii, Integer insets) {
-		CornerRadii rad = null;
-		Insets in = null;
-		if (radii != null)
-			rad = new CornerRadii(radii);
-		if (insets != null)
-			in = new Insets(insets);
-		BackgroundFill fill = new BackgroundFill(color, rad, in);
-		return new Background(fill);
 	}
 	
 	public static void updateScoreboard() {

@@ -10,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Main extends Application {
 	
@@ -38,12 +39,16 @@ public class Main extends Application {
 	}
 	
 	private void initStage() {
+		scene.setFill(Color.TRANSPARENT);
+		
 		stage.setScene(scene);
 		stage.setTitle("Snake");
 		stage.getIcons().add(new Image("Images/Snake icon.png"));
 		stage.setOnCloseRequest(e -> exit());
 		stage.setResizable(false);
-
+		stage.initStyle(StageStyle.TRANSPARENT);
+		
+		layoutRoot.setStyle("-fx-background-color: transparent;");
 		layoutRoot.setBackground(new Background(new BackgroundFill(Color.color(0.1, 0.15, 0.18), null, null)));
 
 		layoutRoot.setCenter(center);

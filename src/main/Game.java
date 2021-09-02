@@ -36,7 +36,8 @@ public class Game {
 	public Game() {
 		gameOver = false;
 		updateScore(0);		
-		gameRoot.setMaxWidth(GAME_WIDTH);
+		gameRoot.setStyle("-fx-background-radius: 10 0 0 10; -fx-background-color: #19262e;");
+		gameRoot.setPrefSize(GAME_WIDTH, GAME_HEIGHT);
 		gameRoot.getChildren().clear();
 		start();
 	}
@@ -60,7 +61,7 @@ public class Game {
 				
 				
 				try {
-					Thread.sleep(0);
+					Thread.sleep(MEDIUM);
 				}
 				catch (InterruptedException e) {
 				}
