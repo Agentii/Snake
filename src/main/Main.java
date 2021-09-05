@@ -29,7 +29,7 @@ public class Main extends Application {
 	public static Sidebar sidebar;
 	public static Topbar topbar;
 	
-	Media media = new Media(new File("D:/programming/eclipse-workspace/Snake/src/files/media/beatsburg_freehousetypebeat.mp3").toURI().toString());
+	Media media = new Media(new File(System.getProperty("user.dir") + "/src/files/media/beatsburg_freehousetypebeat.mp3").toURI().toString());
 	MediaPlayer mediaPlayer = new MediaPlayer(media);
 	
 	public static void main(String[] args) {

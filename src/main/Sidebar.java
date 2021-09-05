@@ -23,7 +23,7 @@ public class Sidebar extends AnchorPane {
 	public static final int SIDEBAR_WIDTH = 100;
 	public static final int SIDEBAR_HEIGHT = Game.GAME_HEIGHT;
 	
-	private static String highscoreFilePath = "D:\\programming\\eclipse-workspace\\Snake\\src\\files\\text\\Highscore.txt";
+	private static String highscoreFilePath = System.getProperty("user.dir") + "/src/files/text/Highscore.txt";
 	private File file;
 	private Scanner sc;
 	
