@@ -1,6 +1,7 @@
 package main;
 
 import controller.KeyboardInputs;
+import controller.MouseInputs;
 import entity.Head;
 import entity.Body;
 import entity.Food;
@@ -11,10 +12,8 @@ import java.util.List;
 import javafx.animation.AnimationTimer;
 import javafx.scene.layout.Pane;
 
-public class Game {
-	
-	public static Pane gameRoot = new Pane();
-	
+public class Game extends Pane {
+
 	public static final int GAME_WIDTH = 600, GAME_HEIGHT = 520;
 	public static final int ENTITY_SIZE = 20;
 	public static final int EASY = 40, MEDIUM = 70, HARD = 100;
@@ -34,21 +33,20 @@ public class Game {
 	private List<Body> badBodyparts = new ArrayList<Body>();
 	
 	public Game() {
-		gameOver = false;
-		updateScore(0);		
-		gameRoot.setStyle("-fx-background-radius: 10 0 0 10; -fx-background-color: #19262e;");
-		gameRoot.setPrefSize(GAME_WIDTH, GAME_HEIGHT);
-		gameRoot.getChildren().clear();
-		start();
+		setStyle("-fx-background-radius: 0 0 0 10;"
+						+ "-fx-background-color: #19262e;");
+		setMinSize(GAME_WIDTH, GAME_HEIGHT);
+		setMaxSize(GAME_WIDTH, GAME_HEIGHT);
 	}
 
-	private void start() {
+	public void start() {
 		initSnake();
 		initFood();
-		KeyboardInputs.controlSnake();
+		KeyboardInputs.readInputs();
+		MouseInputs.readInputs();
 		gameloop = new AnimationTimer() {
 			@Override
-			public void handle(long now) {
+			public void handle(long now) {				
 				if (gameOver)
 					return;
 				KeyboardInputs.keyWait = false;
@@ -58,7 +56,6 @@ public class Game {
 				checkFoodCollision();
 				if (snakeSize > 4)
 					checkSnakeCollision();
-				
 				
 				try {
 					Thread.sleep(MEDIUM);
@@ -71,15 +68,17 @@ public class Game {
 
 	}
 	
-	private void initFood() {
-		food = new Food(0, 0);
-		updateFood();
-	}
-	
 	private void initSnake() {
 		head = new Head(GAME_WIDTH >> 1, GAME_HEIGHT >> 1);
 		neck = tail = new Body(head.getX(), head.getY());
 		neck.next = tail.next = tail;
+		snakeSize = 2;
+		badBodyparts.clear();
+	}
+	
+	private void initFood() {
+		food = new Food();
+		updateFood();
 	}
 	
 	private void updateSnake() {
@@ -146,6 +145,15 @@ public class Game {
 	private void gameOver() {
 		gameOver = true;
 		Sidebar.showGameOver(true);
+	}
+	
+	public void restart() {
+		gameloop.stop();
+		gameOver = false;
+		Sidebar.showGameOver(false);
+		updateScore(0);		
+		getChildren().clear();
+		start();
 	}
 
 }

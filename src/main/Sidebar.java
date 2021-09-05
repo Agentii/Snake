@@ -13,23 +13,24 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-import static main.Main.SCENE_HEIGHT;
-
-public class Sidebar {
+public class Sidebar extends AnchorPane {
 	
 	public static final int SIDEBAR_WIDTH = 100;
+	public static final int SIDEBAR_HEIGHT = Game.GAME_HEIGHT;
 	
-	public static AnchorPane sidebarRoot = new AnchorPane();
+//	public static AnchorPane sidebarRoot = new AnchorPane();
 	private static Label highscore, score;
 	private static Text gameOver;
 	
 	public Sidebar() {
-		sidebarRoot.getChildren().clear();
 		initSidebar();
 	}
 	
 	private void initSidebar() {
-		sidebarRoot.setStyle("-fx-background-radius: 0 10 10 0; -fx-background-color: #0d3329;");
+		setStyle("-fx-background-radius: 0 0 10 0;"
+							+"-fx-background-color: #0d3329;");
+		setMinSize(SIDEBAR_WIDTH, SIDEBAR_HEIGHT);
+		setMaxSize(SIDEBAR_WIDTH, SIDEBAR_HEIGHT);
 
 		// Scoreboard
 		VBox scoreboard = new SidebarVBox(10, Pos.TOP_CENTER);	
@@ -37,7 +38,7 @@ public class Sidebar {
 		highscore = new SidebarLabel(String.format("HIGHSCORE\n%d", 0));
 		score = new SidebarLabel(String.format("SCORE\n%d", 0));
 		
-		// Game over text
+		// Game Over text
 		gameOver = new Text("\n\n\n\nGame\nOver");
 		gameOver.setFont(Font.font("Arial", FontWeight.BOLD, 24));
 		gameOver.setTextAlignment(TextAlignment.CENTER);
@@ -55,7 +56,7 @@ public class Sidebar {
 		VBox options = new SidebarVBox(10, Pos.BOTTOM_CENTER);
 		
 		Button restart = new SidebarButton("Restart");
-		restart.setOnAction(e -> Main.restart());
+		restart.setOnAction(e -> Main.game.restart());
 		
 		Button quit = new SidebarButton("Quit");
 		quit.setOnAction(e -> Main.exit());
@@ -63,7 +64,7 @@ public class Sidebar {
 		options.getChildren().addAll(restart, quit);
 		
 		// Add to root
-		sidebarRoot.getChildren().addAll(scoreboard, options);
+		getChildren().addAll(scoreboard, options);
 		AnchorPane.setBottomAnchor(options, 0.);
 		
 	}
@@ -95,7 +96,7 @@ public class Sidebar {
 		
 		private SidebarVBox(double spacing, Pos alignment) {
 			super(spacing);
-			setPrefSize(SIDEBAR_WIDTH, SCENE_HEIGHT);
+			setPrefSize(SIDEBAR_WIDTH, SIDEBAR_HEIGHT);
 			setAlignment(alignment);
 			setPadding(new Insets(15, 0, 15, 0));
 			setStyle("-fx-background-color: transparent;");

@@ -2,29 +2,27 @@ package main;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class Main extends Application {
 	
-	public static final int SCENE_WIDTH = Game.GAME_WIDTH + Sidebar.SIDEBAR_WIDTH;
-	public static final int SCENE_HEIGHT = Game.GAME_HEIGHT;
+	private static final int SHADOW_SIZE = 10;
+	public static final int SCENE_WIDTH = Game.GAME_WIDTH + Sidebar.SIDEBAR_WIDTH + 2*SHADOW_SIZE;
+	public static final int SCENE_HEIGHT = Game.GAME_HEIGHT + Topbar.TOPBAR_HEIGHT + SHADOW_SIZE;
 
 	public static Stage stage;
 	public static BorderPane layoutRoot = new BorderPane();
-	public static VBox center = new VBox();
-	public static VBox right = new VBox();
-	public static HBox top = new HBox();
 	public static Scene scene = new Scene(layoutRoot, SCENE_WIDTH, SCENE_HEIGHT);
 	
 	public static Game game;
 	public static Sidebar sidebar;
+	public static Topbar topbar;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -33,38 +31,31 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		stage = primaryStage;
-		initStage();
-		sidebar = new Sidebar();
 		game = new Game();
+		sidebar = new Sidebar();
+		topbar = new Topbar();
+		initStage();
+		game.start();
 	}
 	
 	private void initStage() {
 		scene.setFill(Color.TRANSPARENT);
 		
 		stage.setScene(scene);
-		stage.setTitle("Snake");
+		stage.setTitle("It's just snake...");
 		stage.getIcons().add(new Image("Images/Snake icon.png"));
-		stage.setOnCloseRequest(e -> exit());
-		stage.setResizable(false);
 		stage.initStyle(StageStyle.TRANSPARENT);
 		
-		layoutRoot.setStyle("-fx-background-color: transparent;");
-		
-		layoutRoot.setCenter(center);
-		layoutRoot.setRight(right);
-		center.getChildren().add(Game.gameRoot);
-		right.getChildren().add(Sidebar.sidebarRoot);
+		layoutRoot.setCenter(game);
+		layoutRoot.setRight(sidebar);
+		layoutRoot.setTop(topbar);
+		layoutRoot.setPadding(new Insets(0, SHADOW_SIZE, SHADOW_SIZE, SHADOW_SIZE));
+		layoutRoot.setStyle("-fx-background-color: transparent;"
+							+String.format("-fx-effect: dropshadow(gaussian, black, %d, 0, 0, 2);", SHADOW_SIZE));
 	}
 
 	public static void exit() {
 		Platform.exit();
 	}
-	
-	public static void restart() {
-		Sidebar.showGameOver(false);
-		Game.gameloop.stop();
-		game = new Game();
-	}
-
 }
 

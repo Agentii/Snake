@@ -11,9 +11,9 @@ public class KeyboardInputs {
 	
 	public static boolean keyWait = false;  // To prevent 180-turns
 	
-	public static void controlSnake() {
+	public static void readInputs() {
 		// Event handler for key presses
-		scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
+		scene.addEventHandler(KeyEvent.KEY_PRESSED, key -> {
 			switch (key.getCode()) {
 			
 			case UP:
