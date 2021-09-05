@@ -6,6 +6,7 @@ import entity.Head;
 import entity.Body;
 import entity.Food;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,11 +98,11 @@ public class Game extends Pane {
 		if (score > highscore) {
 			highscore = score;
 		}
-		Sidebar.updateScoreboard();		
-	}
-	
-	private void smoothAnimation() {
-		
+		try {
+			Sidebar.updateScoreboard();
+		} 
+		catch (IOException e) {
+		}		
 	}
 	
 	private void addBody() {

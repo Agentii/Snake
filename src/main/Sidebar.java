@@ -1,5 +1,10 @@
 package main;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -18,11 +23,16 @@ public class Sidebar extends AnchorPane {
 	public static final int SIDEBAR_WIDTH = 100;
 	public static final int SIDEBAR_HEIGHT = Game.GAME_HEIGHT;
 	
-//	public static AnchorPane sidebarRoot = new AnchorPane();
+	private static String highscoreFilePath = "D:\\programming\\eclipse-workspace\\Snake\\src\\files\\text\\Highscore.txt";
+	private File file;
+	private Scanner sc;
+	
 	private static Label highscore, score;
 	private static Text gameOver;
 	
-	public Sidebar() {
+	public Sidebar() throws IOException {
+		this.file = new File(highscoreFilePath);
+		this.sc = new Scanner(file);
 		initSidebar();
 	}
 	
@@ -33,9 +43,11 @@ public class Sidebar extends AnchorPane {
 		setMaxSize(SIDEBAR_WIDTH, SIDEBAR_HEIGHT);
 
 		// Scoreboard
-		VBox scoreboard = new SidebarVBox(10, Pos.TOP_CENTER);	
-
-		highscore = new SidebarLabel(String.format("HIGHSCORE\n%d", 0));
+		VBox scoreboard = new SidebarVBox(10, Pos.TOP_CENTER);
+		int prevHighscore = sc.nextInt();
+		highscore = new SidebarLabel(String.format("HIGHSCORE\n%d", prevHighscore));
+		Game.highscore = prevHighscore;
+		sc.close();
 		score = new SidebarLabel(String.format("SCORE\n%d", 0));
 		
 		// Game Over text
@@ -103,9 +115,12 @@ public class Sidebar extends AnchorPane {
 		}
 	}
 	
-	public static void updateScoreboard() {
+	public static void updateScoreboard() throws IOException {
 		highscore.setText(String.format("HIGHSCORE\n%d", Game.highscore));
 		score.setText(String.format("SCORE\n%d", Game.score));
+		FileWriter writer = new FileWriter(highscoreFilePath);
+		writer.write(String.valueOf(Game.highscore));
+		writer.close();
 	}
 	
 	public static void showGameOver(boolean visible) {

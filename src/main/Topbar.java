@@ -37,7 +37,7 @@ public class Topbar extends AnchorPane {
 					+ "-fx-font-size: 12");
 		name.setTextFill(Color.LIGHTGRAY);
 		
-		ImageView logo = new ImageView(new Image("Images/Snake icon.png", TOPBAR_HEIGHT - 5, TOPBAR_HEIGHT - 5, false, true));
+		ImageView logo = new ImageView(new Image("files/images/Snake icon.png", TOPBAR_HEIGHT - 5, TOPBAR_HEIGHT - 5, false, true));
 		
 		nameAndLogo.getChildren().addAll(logo, name);
 		

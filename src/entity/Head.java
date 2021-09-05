@@ -9,7 +9,7 @@ import static main.Game.ENTITY_SIZE;
 
 public class Head extends Body {
 	
-	private ImagePattern eyes = new ImagePattern(new Image("Images/Snake head 2.png"));
+	private ImagePattern eyes = new ImagePattern(new Image("files/images/Snake head 2.png"));
 	public Rotate rotate;
 
 	public Head(double x, double y) {

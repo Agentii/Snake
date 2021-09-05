@@ -1,14 +1,19 @@
 package main;
 
+import java.io.File;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 public class Main extends Application {
 	
@@ -24,6 +29,9 @@ public class Main extends Application {
 	public static Sidebar sidebar;
 	public static Topbar topbar;
 	
+	Media media = new Media(new File("D:/programming/eclipse-workspace/Snake/src/files/media/beatsburg_freehousetypebeat.mp3").toURI().toString());
+	MediaPlayer mediaPlayer = new MediaPlayer(media);
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -31,6 +39,13 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		stage = primaryStage;
+		mediaPlayer.setOnEndOfMedia(new Runnable() {
+			@Override
+			public void run() {
+				mediaPlayer.seek(Duration.ZERO);
+			}
+		});
+		mediaPlayer.play();
 		game = new Game();
 		sidebar = new Sidebar();
 		topbar = new Topbar();
@@ -43,7 +58,7 @@ public class Main extends Application {
 		
 		stage.setScene(scene);
 		stage.setTitle("It's just snake...");
-		stage.getIcons().add(new Image("Images/Snake icon.png"));
+		stage.getIcons().add(new Image("files/images/Snake icon.png"));
 		stage.initStyle(StageStyle.TRANSPARENT);
 		
 		layoutRoot.setCenter(game);
