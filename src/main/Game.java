@@ -1,7 +1,6 @@
 package main;
 
 import controller.KeyboardInputs;
-import controller.MouseInputs;
 import entity.Head;
 import entity.Body;
 import entity.Food;
@@ -34,8 +33,7 @@ public class Game extends Pane {
 	private List<Body> badBodyparts = new ArrayList<Body>();
 	
 	public Game() {
-		setStyle("-fx-background-radius: 0 0 0 10;"
-						+ "-fx-background-color: #19262e;");
+		setStyle("-fx-background-radius: 0 0 0 10; -fx-background-color: #19262e;");
 		setMinSize(GAME_WIDTH, GAME_HEIGHT);
 		setMaxSize(GAME_WIDTH, GAME_HEIGHT);
 	}
@@ -44,7 +42,6 @@ public class Game extends Pane {
 		initSnake();
 		initFood();
 		KeyboardInputs.readInputs();
-		MouseInputs.readInputs();
 		gameloop = new AnimationTimer() {
 			@Override
 			public void handle(long now) {				
