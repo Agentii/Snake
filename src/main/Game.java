@@ -70,7 +70,7 @@ public class Game extends Pane {
 		neck = tail = new Body(head.getX(), head.getY());
 		neck.next = tail.next = tail;
 		snakeSize = 2;
-		badBodyparts.clear();
+		badBodyparts = new ArrayList<Body>();
 	}
 	
 	private void initFood() {
