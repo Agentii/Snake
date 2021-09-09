@@ -59,6 +59,7 @@ public class Main extends Application {
 	}
 	
 	private void playMusic() {
+		mediaPlayer.setVolume(0.04);
 		mediaPlayer.setOnEndOfMedia(new Runnable() {
 			@Override
 			public void run() {

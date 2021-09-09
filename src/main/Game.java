@@ -63,7 +63,6 @@ public class Game extends Pane {
 			}			
 		};
 		Main.stage.show();
-
 	}
 	
 	private void initSnake() {
